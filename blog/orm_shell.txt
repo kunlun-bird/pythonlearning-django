@@ -1,0 +1,55 @@
+(venv) C:\Users\Black\PycharmProjects\Py_Web>python manage.py shell
+Python 3.7.4 (default, Aug  9 2019, 18:34:13) [MSC v.1915 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> Post.objects.all()
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+NameError: name 'Post' is not defined
+>>> from blog.models import Post
+>>> Post.objects.all()
+<QuerySet [<Post: 这是第一篇blog>, <Post: 这是grace的第一篇blog>, <Post: grace和我的第一篇联合署名blog>, <Post: grace的第一个blog>, <Post: klfein
+iao的第一个blog>, <Post: grace的第二个blog>]>
+>>> User.objects.all()
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+NameError: name 'User' is not defined
+>>> from django.contrib.auth.models import User
+>>> User.objects.all()
+<QuerySet [<User: klyu>, <User: grace>, <User: klfeiniao>]>
+>>> me = User.objects.get(username='klfeiniao')
+>>> Post.objects.create(author=me,title='blog post in shell',text='This blog was post by code in shell!')
+<Post: blog post in shell>
+>>> Post.objects.all()
+<QuerySet [<Post: 这是第一篇blog>, <Post: 这是grace的第一篇blog>, <Post: grace和我的第一篇联合署名blog>, <Post: grace的第一个blog>, <Post: klfein
+iao的第一个blog>, <Post: grace的第二个blog>, <Post: blog post in shell>]>
+>>> grace = User.objects.get(username='grace')
+>>> Post.objects.create(author=grace,title='grace post a new blog in shell',text='Grace post her new blog by code too.')
+<Post: grace post a new blog in shell>
+>>> Post.objects.filter(author=grace)
+<QuerySet [<Post: 这是grace的第一篇blog>, <Post: grace和我的第一篇联合署名blog>, <Post: grace的第一个blog>, <Post: grace的第二个blog>, <Post: gra
+ce post a new blog in shell>]>
+>>> Post.objects.filter(title__contains='grace')
+<QuerySet [<Post: 这是grace的第一篇blog>, <Post: grace和我的第一篇联合署名blog>, <Post: grace的第一个blog>, <Post: grace的第二个blog>, <Post: gra
+ce post a new blog in shell>]>
+>>> post = Post.objects.get(title="blog post in shell")
+>>> post.publish()
+>>> Post.objects.filter(published_date__lte=timezone.now())
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+NameError: name 'timezone' is not defined
+>>> from djanto.utils import timezone
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+ModuleNotFoundError: No module named 'djanto'
+>>> from django.utils import timezone
+>>> Post.objects.filter(published_date__lte=timezone.now())
+<QuerySet [<Post: 这是第一篇blog>, <Post: 这是grace的第一篇blog>, <Post: grace和我的第一篇联合署名blog>, <Post: grace的第一个blog>, <Post: klfein
+iao的第一个blog>, <Post: grace的第二个blog>, <Post: blog post in shell>]>
+>>> Post.objects.order_by('created_date')
+<QuerySet [<Post: 这是第一篇blog>, <Post: 这是grace的第一篇blog>, <Post: grace和我的第一篇联合署名blog>, <Post: grace的第一个blog>, <Post: klfein
+iao的第一个blog>, <Post: grace的第二个blog>, <Post: blog post in shell>, <Post: grace post a new blog in shell>]>
+>>> Post.objects.order_by('-created_date')
+<QuerySet [<Post: grace post a new blog in shell>, <Post: blog post in shell>, <Post: grace的第二个blog>, <Post: klfeiniao的第一个blog>, <Post: g
+race的第一个blog>, <Post: grace和我的第一篇联合署名blog>, <Post: 这是grace的第一篇blog>, <Post: 这是第一篇blog>]>
+>>> exit()
